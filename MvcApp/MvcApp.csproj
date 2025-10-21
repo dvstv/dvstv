@@ -14,4 +14,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
   </ItemGroup>
+
+  <!-- Unblock .resx files on Windows to remove Mark-of-the-Web before resgen/compile -->
+  <Target Name="UnblockResxFiles"
+          BeforeTargets="PrepareResources;GenerateResource;CoreCompile"
+          Condition="'$(OS)' == 'Windows_NT'">
+    <Message Text="Unblocking Mark-of-the-Web on .resx files" Importance="low" />
+    <Exec Command="powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command &quot;Get-ChildItem -Path &apos;$(MSBuildProjectDirectory)&apos; -Recurse -Filter *.resx | ForEach-Object { Unblock-File -LiteralPath $_.FullName -ErrorAction SilentlyContinue }&quot;" />
+  </Target>
 </Project>
